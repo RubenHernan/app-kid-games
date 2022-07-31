@@ -59,7 +59,7 @@
                     <li class="nav-item"><a href="courses.html" class="nav-link">Sopa Letra</a></li>
                     <li class="nav-item"><a href="pricing.html" class="nav-link">Competencias</a></li>
                     <!-- <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li> -->
-                    <li class="nav-item"><a href="contact.html" class="nav-link"><span class="icon-user"></span>
+                    <li class="nav-item"><a href="#" class="nav-link" data-toggle="modal" data-target=".modal"><span class="icon-user"></span>
                             Ingresar</a></li>
                 </ul>
             </div>
@@ -131,7 +131,34 @@
         </div>
     </footer>
 
-
+	<div class="modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-md modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<?= HTML::image('assets\web\img\login.jpg',['style' => 'width: 100%;padding: 0px 150px;'])?>
+					<button style="background: #606060;position: absolute;opacity: 1;padding: 5px 10px;color: #fff;right: -40px;top: 0;border-radius: 50%;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 style="font-weight: bold;">Inicia sesión en cuestión de segundos</h4>
+					<p>Usa tu correo electrónico para continuar con kidgame (gratis).</p>
+					
+					<button style="border: none!important;outline: none;width: 100%;padding: 10px;cursor: pointer;" type="button">
+						<span>
+							<span aria-hidden="true" class="NA_Img dkWypw">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="24" width="24">
+									<path fill="#4285f4" d="M386 400c45-42 65-112 53-179H260v74h102c-4 24-18 44-38 57z"></path>
+									<path fill="#34a853" d="M90 341a192 192 0 0 0 296 59l-62-48c-53 35-141 22-171-60z"></path>
+									<path fill="#fbbc02" d="M153 292c-8-25-8-48 0-73l-63-49c-23 46-30 111 0 171z"></path>
+									<path fill="#ea4335" d="M153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55z"></path>
+								</svg>
+							</span>
+						</span>
+						<span class="">Continuar con Google</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
     <!-- loader -->
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
