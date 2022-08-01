@@ -92,7 +92,7 @@
                     </a>
                     <div class="text bg-white p-4">
                         <h3 class="heading"><a href="#">Memoria</a></h3>
-                        <p>Inperio Inca.</p>
+                        <p>Imperio Inca.</p>
                         <div class="d-flex align-items-center mt-4">
                             <p class="mb-0"><a href="#" class="btn btn-primary">Jugar <span
                                         class="ion-ios-arrow-round-forward"></span></a></p>
