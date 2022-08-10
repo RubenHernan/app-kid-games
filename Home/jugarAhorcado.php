@@ -5,28 +5,49 @@ include("connection.php");
 
 if(isset($_GET["Id"])){
 
-  $Id = $_GET["Id"];
-  $query = "SELECT Titulo,Tema.Descripcion, palabra, tiempo FROM Juego INNER JOIN Tema ON Juego.codTema = Tema.Codigo where Juego.Codigo = $Id";
-  $resultado= mysqli_query($conn,$query);
-  if(mysqli_num_rows($resultado)==1){
-    $registro=mysqli_fetch_array($resultado); //transforma a un array
-    $titulo=$registro["Titulo"];
-    $tema=$registro["Descripcion"];
-    $palabra=$registro["palabra"];
-    $tiempo=$registro["tiempo"];
+  $Id = base64_decode($_GET["Id"]);
 
+
+  //validado
+  $query = "SELECT Titulo,Tema.Descripcion, Palabra, Pistas, tiempo FROM Juego 
+  INNER JOIN Tema ON Juego.codTema = Tema.Codigo 
+  INNER JOIN Ahorcado ON Juego.Codigo = Ahorcado.Codigo 
+  where Juego.Codigo = ?";
+  $resultado= mysqli_prepare($conn,$query);
+  $validar=mysqli_stmt_bind_param($resultado, "i", $Id);
+  $validar=mysqli_stmt_execute($resultado);
+  if($validar==false){
+    echo "Error al ejecutar la consulta";
   }
+  else{
+    $validar=mysqli_stmt_bind_result($resultado, $titulo, $tema, $palabra,$pistas, $tiempo);
+    if(mysqli_stmt_fetch($resultado)){
 
-}
 
 ?>
 
 <script>
 
-function generaPalabra() {
-
+function declarar(){
   palabra = "<?php echo $palabra?>";
-  console.log(palabra);
+  minutos = <?php echo $tiempo?>;
+  segundos = 0;
+}
+
+
+// Restablecer juego
+function inicio() {
+  declarar();
+  pintarGuiones(palabra);
+  generaABC("a","z");
+  cargarSegundo();
+  cont = 6;
+  document.getElementById("intentos").innerHTML=cont;
+}
+
+
+function pista() {
+  document.getElementById("hueco-pista").innerHTML = "<?php echo $pistas?>";
 }
 
 </script>
@@ -36,7 +57,25 @@ function generaPalabra() {
   <head>
     <meta charset="utf-8">
     <title>Jugar ahorcado</title>
-    <link rel="stylesheet" href="../css/estilo-ahoracado.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Fredericka+the+Great" rel="stylesheet">
+
+<link rel="stylesheet" href="../css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="../css/animate.css">
+    
+    <link rel="stylesheet" href="../css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="../css/magnific-popup.css">
+
+    <link rel="stylesheet" href="../css/aos.css">
+
+    <link rel="stylesheet" href="../css/ionicons.min.css">
+    
+    <link rel="stylesheet" href="../css/flaticon.css">
+    <link rel="stylesheet" href="../css/icomoon.css">
+    <link rel="stylesheet" href="../css/style.css?v=<?php echo time();?>">
+    <link rel="stylesheet" href="../css/estilo-ahoracado.css?v=<?php echo time();?>">
   </head>
   <body>
       <div class="main-container">
@@ -62,19 +101,58 @@ function generaPalabra() {
             <h3>Intentos restantes: <span id="intentos">6</span></h3>
           </div>
           <div class="col">
-            <button onclick="inicio()" id="reset">Elegir otra palabra</button>
+          <div class="cont-temporizador">
+                  <div class="bloque">
+                      <div class="minutos" id="minutos">--</div>
+                      <p>M</p>
+                  </div>
+                  <div class="bloque">
+                      <div class="segundos" id="segundos">--</div>
+                      <p>S</p>
+                  </div>
+            </div>
+            </div>
           </div>
-          </div>
+
         
         <div class="flex-row">
           <div class="col">
             <div class="flex-row" id="abcdario">
             </div>
           </div>
-          <div class="col"></div>
+          <div class="col">
+
+            <button onclick="inicio()" id="reset">Reiniciar</button>
+            <button onclick="pista()" id="pista">Quiero una pista</button>
+
+    
+            <span id="hueco-pista"></span>
+
+
+          </div>
         </div>
 
       </div>
-    <script src="../js/ahorcado.js"></script>
+    <script src="../js/ahorca.js"></script>
   </body>
 </html>
+
+<?php
+
+}else{
+  echo '<script type="text/javascript">alert("Error");
+    window.location.href="index.php";
+                        </script>';
+}
+
+$resultado->close();
+
+}
+
+
+
+}
+
+$conn->close();
+
+?>

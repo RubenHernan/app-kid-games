@@ -7,41 +7,49 @@
 	$tema=$_POST['tema'];
     $palabra=$_POST['palabra'];
     $tiempo=$_POST['tiempo'];
-    $date=date('Y/m/d h:i:s', time());
+    $pistas=$_POST['pistas'];
+    $date=date('Y/m/d', time());
     
 	if(isset($_POST['private']))
 {
     // insertar en privado
+    $pr = 1;
+    $query = "CALL insertarJuegoAhorcado(?,?, ?,?, ?,?,?);";
 
-    $query = "INSERT INTO Juego (Titulo,Tipo,Tiempo,Fecha,Privado,Vigente,CodTema,palabra) values ('$titulo', 1 , $tiempo ,'$date', 1, 1, $tema, '$palabra' )";
-    $resultado=mysqli_query($conn,$query);
-    if ($resultado) {
+    $resultado= mysqli_prepare($conn,$query);
+    $validar=mysqli_stmt_bind_param($resultado, "sisiiss", $titulo, $tiempo,$date,$pr, $tema,$palabra,$pistas);
+    $validar=mysqli_stmt_execute($resultado);    
+    
+    if($validar==false){
+        die("Fallo al registrar Juego");
 
+      }else{
         echo '<script type="text/javascript">alert("Juego Registrado.");
         window.location.href="../ahorcado.php";
                             </script>';
+      }
 
-    }else
-    {
-        die("Fallo al registrar Juego");
-    }
 
 
 }else
 {
 //insertar en publico
-$query = "INSERT INTO Juego (Titulo,Tipo,Tiempo,Fecha,Privado,Vigente,CodTema,palabra) values ('$titulo', 1 , $tiempo ,'$date', 0, 1, $tema, '$palabra' )";
-$resultado=mysqli_query($conn,$query);
-if ($resultado) {
 
+$pr = 0;
+$query = "CALL insertarJuegoAhorcado(?,?, ?,?, ?,?,?);";
+
+$resultado= mysqli_prepare($conn,$query);
+$validar=mysqli_stmt_bind_param($resultado, "sisiiss", $titulo, $tiempo,$date,$pr, $tema,$palabra,$pistas);
+$validar=mysqli_stmt_execute($resultado);    
+
+if($validar==false){
+    die("Fallo al registrar Juego");
+
+  }else{
     echo '<script type="text/javascript">alert("Juego Registrado y publicado!.");
     window.location.href="../ahorcado.php";
                         </script>';
-
-}else
-{
-    die("Fallo al registrar Juego");
-}
+  }
 }
 
 

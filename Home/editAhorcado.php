@@ -4,56 +4,23 @@
 
 	if(isset($_GET["Id"])){
 
-		$Id = $_GET["Id"];
-		$query = "SELECT  Titulo,Privado,codTema,palabra, tiempo FROM Juego WHERE Codigo = $Id";
+		$Id = base64_decode($_GET["Id"]);
+		$query = "SELECT Titulo,Privado, codTema,Fecha,Palabra, Pistas, Tiempo FROM Juego
+    INNER JOIN Tema ON Juego.codTema = Tema.Codigo
+    INNER JOIN Ahorcado ON Juego.Codigo = Ahorcado.Codigo 
+    where Juego.codigo =  $Id";
+
 		$resultado= mysqli_query($conn,$query);
 		if(mysqli_num_rows($resultado)==1){
 			$registro=mysqli_fetch_array($resultado); //transforma a un array
 			$titulo=$registro["Titulo"];
 			$privado=$registro["Privado"];
 			$codTema=$registro["codTema"];
-			$palabra=$registro["palabra"];
-			$tiempo=$registro["tiempo"];
+			$palabra=$registro["Palabra"];
+			$tiempo=$registro["Tiempo"];
+      $pistas=$registro["Pistas"];
 
 		}
-
-	}
-
-	if(isset($_POST["updateA"])){
-
-		$Id=$_GET["Id"];
-		$titulo=$_POST["tituloE"];
-		$palabra=$_POST["palabraE"];
-		$tema=$_POST["temaE"];
-		$tiempo=$_POST["tiempoE"];
-
-		if(isset($_POST["visibilidad"])){
-			$visibilidad=1;
-		}else{
-			$visibilidad=0;
-		}
-
-
-		$query="UPDATE Juego SET Titulo='$titulo',palabra='$palabra', codTema=$tema, tiempo=$tiempo ,Privado=$visibilidad WHERE Codigo = $Id";
-
-
-
-
-		$resultado=mysqli_query($conn,$query);
-    if ($resultado) {
-
-        
-		echo '<script type="text/javascript">alert("Juego del ahorcado Actualizado!!.");
-		window.location.href="ahorcado.php";
-		   </script>';
-
-    }else
-    {
-        die("Fallo al actualizar Juego");
-    }
-
-
-
 
 	}
 
@@ -93,7 +60,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark ftco_navbar ftco-navbar-light" id="ftco-navbar">
 	    <div class="container d-flex align-items-center">
-	    	<a class="navbar-brand" href="index.html">Kiddos</a>
+	    	<a class="navbar-brand" href="index.php">Kiddos</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="oi oi-menu"></span> Menu
 	      </button>
@@ -130,7 +97,7 @@
     <div class="container">
     <div class="row d-flex align-items-stretch no-gutters">
 	 <div class="col-md-6 p-4 p-md-5 order-md-last bg-light">
-        <form action="editAhorcado.php?Id=<?php echo $_GET['Id'] ?>" method="POST">
+        <form action="edit/eAhorcado.php?Id=<?php echo base64_encode($Id) ?>" method="POST">
         
         <div class="form-group">
                <p>Título</p> <input type="text" class="form-control" name="tituloE" placeholder="Ingrese titulo..." value="<?php echo $titulo?>">
@@ -159,6 +126,9 @@
 
         <div class="form-group">       
             <p>Palabra</p> <input type="text" class="form-control" name="palabraE" placeholder="Ingrese palabra para el juego..." value="<?php echo $palabra?>">
+        </div>   
+        <div class="form-group">       
+            <p>Pista</p> <input type="text" class="form-control" name="pistaE" placeholder="Ingrese pista para el juego..." value="<?php echo $pistas?>">
         </div>        
         <div class="form-group">       
             <p>Tiempo (minutos)</p> <input type="number" class="form-control" name="tiempoE" min="1" max="5" value="<?php echo $tiempo?>">

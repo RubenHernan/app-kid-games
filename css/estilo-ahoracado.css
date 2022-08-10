@@ -95,3 +95,38 @@ picture img {
   border: 2px dashed crimson;
   padding: 3px 2px 2px 6px;
 }
+
+
+.cont-temporizador{
+  display: flex;
+  justify-content: center;   
+  margin-top: 15px; 
+}
+
+.cont-temporizador .bloque{
+  margin: 0px 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cont-temporizador .bloque div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(136, 115, 227, 0.695);
+  box-shadow: 0px 0px 6px 2px #9058d9 inset;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: bold;
+  width: 30px;
+  height: 20px;
+  margin-bottom: 1px;
+  border-radius: 5px;
+}
+
+.cont-temporizador .bloque p{
+  font-size: 11px;
+  font-weight: bold;
+  color: #d6d6d6;
+}

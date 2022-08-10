@@ -33,14 +33,14 @@
     
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark ftco_navbar ftco-navbar-light" id="ftco-navbar">
 	    <div class="container d-flex align-items-center">
-	    	<a class="navbar-brand" href="index.html">Kiddos</a>
+	    	<a class="navbar-brand" href="index.php">Kiddos</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="oi oi-menu"></span> Menu
 	      </button>
 	      <!-- <p class="button-custom order-lg-last mb-0"><a href="appointment.html" class="btn btn-secondary py-2 px-3">Make An Appointment</a></p> -->
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav ml-auto">
-	        	<li class="nav-item"><a href="index.html" class="nav-link pl-0">Home</a></li>
+	        	<li class="nav-item"><a href="index.php" class="nav-link pl-0">Home</a></li>
 	        	<li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
 	        	<li class="nav-item"><a href="teacher.html" class="nav-link">Teacher</a></li>
 	        	<li class="nav-item"><a href="courses.html" class="nav-link">Courses</a></li>
@@ -69,15 +69,21 @@
 				<div class="row">
 				<?php
 				include "connection.php";
-				$query = "SELECT Juego.Codigo, Titulo,Privado,Tema.Descripcion,Fecha, palabra, tiempo FROM Juego INNER JOIN Tema ON Juego.codTema = Tema.Codigo where Juego.tipo = 1 and Tema.codUsuario = 2 and Juego.Vigente = 1";
+				$query = "SELECT Juego.Codigo,Juego.Vigente, Titulo,Privado,Tema.Descripcion,Fecha, Palabra, tiempo FROM Juego 
+				INNER JOIN Tema ON Juego.codTema = Tema.Codigo 
+				INNER JOIN Ahorcado ON Juego.Codigo = Ahorcado.Codigo 
+				where Juego.tipo = 1 and Tema.codUsuario = 2
+				ORDER BY Juego.Vigente DESC
+				";
 				$resultado = mysqli_query($conn, $query);
-				while ($fila = mysqli_fetch_array($resultado)) { ?>
+				while ($fila = mysqli_fetch_array($resultado)) { 
+					if($fila['Vigente']==1){?>
 
 					<div class="col-md-6 course d-lg-flex ftco-animate">
 						
 						<div class="text bg-light p-4">
-							<h3><a href="editarAhorcado.php"><?php echo $fila['Titulo']?></a></h3>
-							<h4>Palabra: <?php echo $fila['palabra'] ?></h4>
+							<h3><a href="editAhorcado.php?Id=<?php echo base64_encode($fila['Codigo'])?>"><?php echo $fila['Titulo']?></a></h3>
+							<h4>Palabra: <?php echo $fila['Palabra'] ?></h4>
 							<p>Tema: <?php echo $fila['Descripcion'] ?></p>
 							<p>Fecha: <?php echo $fila['Fecha'] ?></p>
 							<p>Tiempo: <?php echo $fila['tiempo'] ?> minutos</p>
@@ -90,13 +96,32 @@
 						
 						</div>
 						<div class="boton p-4 bg-light"> 
-						<p class="text-center"><a href="editAhorcado.php?Id=<?php echo $fila['Codigo'] ?>" class="btn btn-secondary">Editar</a></p>
-						<p class="text-center boton1"><a href="delete/deleteAhorcado.php?Id=<?php echo $fila['Codigo'] ?>" class="btn btn-quarternary">Eliminar</a></p>	
+						<p class="text-center"><a href="editAhorcado.php?Id=<?php echo base64_encode($fila['Codigo']) ?>" class="btn btn-secondary">Editar</a></p>
+						<p class="text-center boton1"><a href="delete/deleteAhorcado.php?Id=<?php echo base64_encode($fila['Codigo']) ?>" class="btn btn-quarternary">Eliminar</a></p>	
 						
 					    </div>
 					</div>
-
-					<?php } ?>
+					<?php				
+					}else{ ?>
+						<div class="col-md-6 course d-lg-flex ftco-animate">
+						
+						<div class="text bg-light p-4">
+							<h3><?php echo $fila['Titulo']?></h3>
+							<h4>Palabra: <?php echo $fila['Palabra'] ?></h4>
+							<p>Tema: <?php echo $fila['Descripcion'] ?></p>
+							<p>Fecha: <?php echo $fila['Fecha'] ?></p>
+							<p>Tiempo: <?php echo $fila['tiempo'] ?> minutos</p>
+							<p class="subheading"><span>Eliminado</span></p>
+						
+						</div>
+						<div class="boton p-4 bg-light"> 
+						<p class="text-center"><a href="edit/rAhorcado.php?Id=<?php echo base64_encode($fila['Codigo']) ?>" class="btn btn-outline-dark">Restaurar</a></p>
+						
+					    </div>
+					</div>	
+					<?php					
+					}
+				} ?>
 
 				</div>
 			</div>
